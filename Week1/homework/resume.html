@@ -4,42 +4,67 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Nolan Yee</title>
+
+        <link rel="stylesheet" href="styles.css" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Cascadia+Code:ital,wght@0,200..700;1,200..700&display=swap"
+            rel="stylesheet"
+        />
     </head>
     <body>
-        <h1>Nolan Yee</h1>
-        <img src="nolan.jpg" alt="Headshot of Nolan Yee" width="300" />
-        <br />
+        <div id="container">
+            <div id="sidebar">
+                <img
+                    id="pfp"
+                    src="nolan.jpg"
+                    alt="Headshot of Nolan Yee"
+                    width="300"
+                />
+                <h1>Nolan Yee</h1>
 
-        <p>Email: nolanyee@utexas.edu</p>
-        <p>Phone: 281-780-3981</p>
+                <p><span class="bold">Email:</span> nolanyee@utexas.edu</p>
+                <p><span class="bold">Phone:</span> 281-780-3981</p>
+            </div>
 
-        <h2>Education</h2>
-        <ul>
-            <li><h3>University of Texas at Austin</h3></li>
-            <p><i>Bachelor of Science, Computer Science</i></p>
-            <p>Graduation Date: May 2029</p>
-            <p>
-                Course Work: Data Structures, Discrete Math for Computer
-                Science, Multivariable Calculus
-            </p>
-        </ul>
+            <div id="content">
+                <div class="content-section">
+                    <h2>Education</h2>
+                    <ul>
+                        <h3>University of Texas at Austin</h3>
+                        <p><i>Bachelor of Science, Computer Science</i></p>
+                        <p><span class="bold">Graduation Date:</span> May 2029</p>
+                        <p>
+                            <span class="bold">Course Work:</span> Data Structures, Discrete Math for
+                            Computer Science, Multivariable Calculus
+                        </p>
+                    </ul>
+                </div>
 
-        <h2>Skills and Tools</h2>
-        <ul>
-            <li>Programming Languages: Java, Python, JavaScript</li>
-            <li>
-                Web Technologies: HTML, CSS, React, Node.js, Tailwind, Bootstrap
-            </li>
-            <li>Databases: SQL, Firebase</li>
-            <li>Tools: Git, IntelliJ IDEA, VSCode</li>
-            <li>Other: PyTorch, Maven, Spring, Jupyter Notebook</li>
-        </ul>
+                <div class="content-section">
+                    <h2>Skills and Tools</h2>
+                    <ul>
+                        <li><span class="bold">Programming Languages:</span> Java, Python, JavaScript</li>
+                        <li>
+                            <span class="bold">Web Technologies:</span> HTML, CSS, React, Node.js,
+                            Tailwind, Bootstrap
+                        </li>
+                        <li><span class="bold">Databases:</span> SQL, Firebase</li>
+                        <li><span class="bold">Tools:</span> Git, IntelliJ IDEA, VSCode</li>
+                        <li><span class="bold">Other:</span> PyTorch, Maven, Spring, Jupyter Notebook</li>
+                    </ul>
+                </div>
 
-        <h2>Org Membership</h2>
-        <ul>
-            <li>Forty Acres Scholars Program</li>
-            <li>Texas Product Engineering Organization (TPEO)</li>
-            <li>Texas Convergent</li>
-        </ul>
+                <div class="content-section">
+                    <h2>Org Membership</h2>
+                    <ul>
+                        <li>Forty Acres Scholars Program (FASP)</li>
+                        <li>Texas Product Engineering Organization (TPEO)</li>
+                        <li>Texas Convergent Build Teams</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
     </body>
 </html>

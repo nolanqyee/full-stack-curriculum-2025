@@ -1,0 +1,44 @@
+* {
+    font-family:'Comic Sans MS', cursive, sans-serif;
+    margin: 0%;
+}
+
+h1 {
+    color: darkblue;
+    font-size: 90px;
+    text-align: center;
+    margin-top: 20px;
+}
+
+input {
+    padding-left: 10px;
+    border-radius: 5px;
+    border: 1px solid gray;
+}
+
+#basic-inputs {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 2%;
+}
+
+.gender-option {
+    margin-left: 10%;
+}
+
+button {
+    margin-top: 0%;
+    border-radius: 2%;
+    border: 1px solid gray;
+    padding: 2% 1%;
+    text-transform: uppercase;
+    font-weight: bold;
+    box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.5);
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+button:hover {
+    background-color: red;
+}
