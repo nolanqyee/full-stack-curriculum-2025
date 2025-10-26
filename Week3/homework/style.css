@@ -66,3 +66,25 @@
     cursor: pointer;
   }
   
+  #forecast-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: space-between;
+    text-align: center;
+    margin-top: 20px;
+  }
+
+  .day-card {
+    background-color: white;
+    width: 18%;
+    height: min-content;
+    border-radius: 5px;
+    border: 1px solid blue;
+    padding: 10px 0px;
+  }
+
+  #current-weather {
+    display: flex;
+    flex-direction: row;
+  }

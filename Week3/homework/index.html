@@ -2,7 +2,7 @@
 <html>
 
 <head>
-	<title>Weather Complete</title>
+	<title>Weather Homework</title>
 	<meta charset="UTF-8" />
   <link rel="stylesheet" type="text/css" href="style.css">
 </head>
@@ -12,6 +12,7 @@
 		<div id='weather-container'>
 		</div> 
 	</div>
+
 	<div id='side-container'>
 		<div>
 			<input id='search-input' placeholder='search for a city'></input>
@@ -23,7 +24,7 @@
 
 <script>
 		// USE YOUR OWN API KEY
-		const apiKey = "";
+		const apiKey = "2e262434f8f261bb825894ee1f0bc988";
 
         // variable that stores the city that is chosen
 		let city;
@@ -64,31 +65,31 @@
 
 		// function that renders the search results as a unordered list
 		function renderSearchResults(searchResults) {
-				// selects the unordered list element search-results-list
-				const ul = document.querySelector('#search-results-list')
-				// shows the unordered list if was hidden previously
-				ul.classList.remove("hidden");
-				// clears out any list items from the previous search
-				ul.innerHTML = ''
-				// loops through each search result and creates and attaches a list item for the unordered list
-				searchResults.forEach((searchResult, index) => {
-					// creates a new unordered list element
-					const li = document.createElement('li')
-					// sets the list item's class as search-result
-					li.setAttribute('class', 'search-result')
-					// sets the text inside the list item as the name and state of the city 
-					const fullName = searchResult.name + ', ' + searchResult.state
-					li.innerHTML = fullName
-					// if the list item of a city is clicked, call the selectCity() function
-					li.addEventListener('click', () => selectCity(fullName, searchResult.name, searchResult.state, searchResult.lat, searchResult.lon))
-					// attaches the list item elements to search-results-list
-					ul.appendChild(li)
+			// selects the unordered list element search-results-list
+			const ul = document.querySelector('#search-results-list')
+			// shows the unordered list if was hidden previously
+			ul.classList.remove("hidden");
+			// clears out any list items from the previous search
+			ul.innerHTML = ''
+			// loops through each search result and creates and attaches a list item for the unordered list
+			searchResults.forEach((searchResult, index) => {
+			// creates a new unordered list element
+			const li = document.createElement('li')
+			// sets the list item's class as search-result
+			li.setAttribute('class', 'search-result')
+			// sets the text inside the list item as the name and state of the city 
+			const fullName = searchResult.name + ', ' + searchResult.state
+			li.innerHTML = fullName
+			// if the list item of a city is clicked, call the selectCity() function
+			li.addEventListener('click', () => selectCity(fullName, searchResult.name, searchResult.state, searchResult.lat, searchResult.lon))
+				// attaches the list item elements to search-results-list
+				ul.appendChild(li)
 			})	
 		}
 
 		// function that is called whenever a city has been selected
 		// HINT: think about what should be rendering on the screen whenever a city is selected and what information is needed to make that happen 
-		function selectCity(fullName, name, state, lat, lon) {
+		async function selectCity(fullName, name, state, lat, lon) {
 			// hides the search-results-list since it is not needed right now
 			document.querySelector('#search-results-list').className = 'hidden'
 			// sets the global city variable
@@ -103,6 +104,122 @@
 			//printing the city object to the console
 			console.log(city);
             // BEGIN CODING HERE
+
+			// fetch the weather data for the selected city
+			let weatherApiCall = `https://api.openweathermap.org/data/2.5/forecast?lat=${city.lat}&lon=${city.lon}&appid=${apiKey}&units=imperial`;
+			let weatherResponse = await fetch(weatherApiCall);
+			const weatherData = await weatherResponse.json();
+
+			weather = weatherData;
+
+			console.log(weather);
+			// fetch the air quality index data for the selected city
+			let aqiApiCall = `http://api.openweathermap.org/data/2.5/air_pollution?lat=${city.lat}&lon=${city.lon}&appid=${apiKey}`;
+			let aqiResponse = await fetch(aqiApiCall);
+			const aqiData = await aqiResponse.json();
+			aqi = aqiData;
+
+			// render the weather, forecast, and air quality index for the selected city
+			renderWeather();
 		}
+
+		function renderWeather() {
+			const container = document.querySelector('#weather-container')
+			container.innerHTML = ''
+
+			const header = document.createElement('div')
+			header.setAttribute('id', 'header')
+			const date = document.createElement('h3')
+			date.innerHTML = formatDate()
+			header.appendChild(date)
+
+			const cityName = document.createElement('h2')
+			cityName.innerHTML = `Weather for ${city.name}, ${city.state}`
+			header.appendChild(cityName)
+
+			container.appendChild(header)
+
+			// render current weather
+			const currentWeatherDiv = document.createElement('div')
+			currentWeatherDiv.setAttribute('id', 'current-weather')
+
+			const currentWeatherInfoDiv = document.createElement('div')
+			currentWeatherInfoDiv.setAttribute('id', 'current-weather-info')
+
+			const weatherDescription = document.createElement('h3')
+			weatherDescription.innerHTML = `${weather.list[0].weather[0].description}`
+			currentWeatherInfoDiv.appendChild(weatherDescription)
+
+			const currentTemp = document.createElement('h1')
+			let temp = weather.list[0].main.temp
+			temp = Math.round(temp)
+			currentTemp.innerHTML = `${temp}°`
+			currentWeatherInfoDiv.appendChild(currentTemp)
+
+			const currentAqi = document.createElement('h4')
+			currentAqi.innerHTML = `AQI: ${aqi.list[0].main.aqi}`
+			currentWeatherInfoDiv.appendChild(currentAqi)
+
+			// add icon based on current weather
+			const currentWeatherImgDiv = document.createElement('div')
+			currentWeatherImgDiv.setAttribute('id', 'current-weather-img-div')
+
+			currentWeatherImgDiv.setAttribute('id', 'current-weather-img-div')
+			const iconCode = weather.list[0].weather[0].icon
+			const iconUrl = `./icons/${iconCode}.svg`
+			const weatherIcon = document.createElement('img')
+			weatherIcon.setAttribute('src', iconUrl)
+			weatherIcon.style.width = '100px'
+			currentWeatherImgDiv.appendChild(weatherIcon)
+
+			currentWeatherDiv.appendChild(currentWeatherInfoDiv)
+			currentWeatherDiv.appendChild(currentWeatherImgDiv)
+
+			container.appendChild(currentWeatherDiv)
+
+			// render forecast for the next 5 days as cards, high and low temps
+			const forecastContainer = document.createElement('div')
+			forecastContainer.setAttribute('id', 'forecast-container')
+
+			// loop through the next 5 days
+			for (let day = 1; day <= 5; day++) {
+				const dayCard = document.createElement('div')
+				dayCard.setAttribute('class', 'day-card')
+				const dayDate = document.createElement('h3')
+				dayDate.innerHTML = formatDate(day)
+				dayCard.appendChild(dayDate)
+
+				// add icon based on daily weather
+				const iconCode = weather.list[day].weather[0].icon
+				const iconUrl = `./icons/${iconCode}.svg`
+				const weatherIcon = document.createElement('img')
+				weatherIcon.setAttribute('src', iconUrl)
+				dayCard.appendChild(weatherIcon)
+
+				// find high and low temps for the day
+				let highTemp = -Infinity
+				let lowTemp = Infinity
+				// loop through the weather data to find temps for the day
+				weather.list.forEach((entry) => {
+					const entryDate = new Date(entry.dt_txt)
+					const today = new Date()
+					if (entryDate.getDate() === today.getDate() + day) {
+						if (entry.main.temp_max > highTemp) {
+							highTemp = entry.main.temp_max		
+						}
+						if (entry.main.temp_min < lowTemp) {
+							lowTemp = entry.main.temp_min
+						}
+					}
+				})
+				highTemp = Math.round(highTemp)
+				lowTemp = Math.round(lowTemp)
+				const tempBounds = document.createElement('h4')
+				tempBounds.innerHTML = `${highTemp}° to ${lowTemp}°`
+				dayCard.appendChild(tempBounds)
+				forecastContainer.appendChild(dayCard)
+			}
+			container.appendChild(forecastContainer)
+		}	
 	</script>
 </html>
