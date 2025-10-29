@@ -1,2 +1,4 @@
 **/node_modules/*
 **/.env
+# ignore local JS config files that may contain API keys
+**/config.js
