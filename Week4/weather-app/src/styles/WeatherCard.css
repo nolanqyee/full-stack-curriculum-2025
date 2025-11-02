@@ -1,0 +1,12 @@
+h3, h4 {
+    margin: 5px 0px;
+}
+
+.weather-card {
+    background-color: white;
+    width: 18%;
+    height: min-content;
+    border-radius: 5px;
+    border: 1px solid blue;
+    padding: 10px 0px;
+}

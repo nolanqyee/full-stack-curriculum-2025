@@ -95,7 +95,8 @@ function SideContainer(props) {
       lat: lat,
       lon: lon,
     };
-    console.log(city);
+    // Call the function passed from App.js to update the selected city state
+    props.setSelectedCity(city);
   }
 
   return (

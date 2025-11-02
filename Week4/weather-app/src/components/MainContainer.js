@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "../styles/MainContainer.css"; // Import the CSS file for MainContainer
+import WeatherCard from "./WeatherCard";
 
 function MainContainer(props) {
 
@@ -29,6 +30,7 @@ function MainContainer(props) {
   null or an empty object.
   */
   
+  const [weather, setWeather] = useState(null);
   
   /*
   STEP 3: Fetch Weather Data When City Changes.
@@ -43,11 +45,37 @@ function MainContainer(props) {
   After fetching the data, use the 'setWeather' function from the 'useState' hook to set the weather data 
   in your state.
   */
-  
+
+  useEffect(() => {
+    if (props.selectedCity) {
+      const { lat, lon } = props.selectedCity;
+      console.log("Fetching weather for:", props.selectedCity);
+      fetch(
+        `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${props.apiKey}&units=imperial`
+      ).then((response) => response.json())
+        .then((data) => {
+          setWeather(data);
+        });
+      }
+    }, [props.selectedCity, props.apiKey]);
   
   return (
     <div id="main-container">
-      <div id="weather-container">
+      {weather ? (
+        <div id="current-weather">
+          <div id="current-weather-info">
+            <h3>{formatDate(0)}</h3>
+            <h2>Weather for {props.selectedCity.fullName}</h2>
+            <h3>{weather.list[0].weather[0].description}</h3>
+            <h1>{Math.round(weather.list[0].main.temp)}°</h1>
+          </div>
+          <div id="current-weather-icon">
+            <img src={`/icons/${weather.list[0].weather[0].icon}.svg`} alt="Weather icon" />
+          </div>
+        </div>
+      ) : <p>No city selected</p>}
+
+      <div id="forecast-container">
         {/* 
         STEP 4: Display Weather Data.
         
@@ -59,6 +87,17 @@ function MainContainer(props) {
         This is a good section to play around with React components! Create your own - a good example could be a WeatherCard
         component that takes in props, and displays data for each day of the week.
         */}
+        {weather && 
+          <>
+          {[1, 2, 3, 4, 5].map((day) => (
+            <WeatherCard
+              weatherData={weather}
+              date={formatDate(day)}
+              daysFromNow={day}
+            />
+          ))}
+          </>
+        }   
       </div>
     </div>
   );
