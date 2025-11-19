@@ -17,6 +17,20 @@ app.use(cors());
 app.use(bodyParser.json());
 
 // Your API routes will go here...
+const auth = (req, res, next) => {
+  try {
+    const tokenId = req.get("Authorization").split("Bearer ")[1];
+    admin.auth().verifyIdToken(tokenId)
+      .then((decoded) => {
+        req.token = decoded;
+        next();
+      })
+      .catch((error) => res.status(401).send(error));
+  } catch (error) {
+    res.status(400).send("Invalid token");
+  }
+};
+
 
 // GET: Endpoint to retrieve all tasks
 app.get("/tasks", async (req, res) => {
@@ -43,12 +57,69 @@ app.get("/tasks", async (req, res) => {
 
 // GET: Endpoint to retrieve all tasks for a user
 // ... 
+app.get("/tasks/:user", auth, async (req, res) => {
+  try {
+    const { user } = req.params;
+    const snapshot = await db.collection("tasks").where("user", "==", user).get();
+
+    let tasks = [];
+    snapshot.forEach((doc) => {
+      tasks.push({
+        id: doc.id,
+        ...doc.data(),
+      });
+    })
+
+    res.status(200).send(tasks);
+
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+})
 
 // POST: Endpoint to add a new task
 // ...
 
+app.post("/tasks", async (req, res) => {
+  try {
+    const newTask = {
+      user: req.body.user,
+      name: req.body.name,
+      finished: false,
+    }
+
+    const docRef = await db.collection("tasks").add(newTask);
+
+    const createdTask = {
+      id: docRef.id,
+      ...newTask,
+    }
+
+    res.status(201).send(createdTask);
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+})
+
 // DELETE: Endpoint to remove a task
 // ...
+
+app.delete("/tasks/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const taskRef = db.collection("tasks").doc(id);
+    const taskSnapshot = await taskRef.get();
+
+    if (!taskSnapshot.exists) {
+      res.status(404).send({ message: "Task not found" });
+    } else {
+      await taskRef.delete();
+      res.status(200).send({ id, ...taskSnapshot.data() });
+    }
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+})
 
 // Setting the port for the server to listen on
 const PORT = process.env.PORT || 3001;
