@@ -11,6 +11,7 @@ require("dotenv").config();
 
 // Importing the Firestore database instance from firebase.js
 const db = require("./firebase");
+const { admin } = require("./firebase");
 
 // Middlewares to handle cross-origin requests and to parse the body of incoming requests to JSON
 app.use(cors());
