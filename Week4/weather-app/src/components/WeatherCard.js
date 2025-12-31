@@ -13,10 +13,13 @@ function WeatherCard(props) {
         let highTemp = -Infinity
         let lowTemp = Infinity
 
+        const targetDate = new Date()
+        targetDate.setDate(targetDate.getDate() + day)
+        const targetDay = targetDate.getDate()
+
         weather.list.forEach((entry) => {
             const entryDate = new Date(entry.dt_txt)
-            const today = new Date()
-            if (entryDate.getDate() === today.getDate() + day) {
+            if (entryDate.getDate() === targetDay) {
                 if (entry.main.temp_max > highTemp) {
                     highTemp = entry.main.temp_max		
                 }
@@ -25,17 +28,26 @@ function WeatherCard(props) {
                 }
             }
         })
+        
+        // If no data was found, return placeholder values
+        if (highTemp === -Infinity || lowTemp === Infinity) {
+            return [0, 0]
+        }
+        
         highTemp = Math.round(highTemp)
         lowTemp = Math.round(lowTemp)
         return [highTemp, lowTemp]
     }
 
     function findDayIndex() {
+        const targetDate = new Date()
+        targetDate.setDate(targetDate.getDate() + day)
+        const targetDay = targetDate.getDate()
+        
         let dayIndex = 0
         weather.list.forEach((entry, index) => {
             const entryDate = new Date(entry.dt_txt)
-            const today = new Date()
-            if (entryDate.getDate() === today.getDate() + day) {
+            if (entryDate.getDate() === targetDay) {
                 dayIndex = index
                 return dayIndex;
             }
